@@ -1,0 +1,40 @@
+{
+  "name": "rrs-loadable",
+  "version": "0.0.1",
+  "description": "Library for dynamic loadable react-redux-saga modules",
+  "main": "dist/index.js",
+  "author": "Dmitrii Nemkov (xeqlol@gmail.com)",
+  "license": "MIT",
+  "scripts": {
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "commit": "./node_modules/.bin/git-cz",
+    "version": " ./node_modules/.bin/conventional-changelog -i CHANGELOG.md -s && git add CHANGELOG.md",
+    "prepublish": "npm run compile && npm run build",
+    "build": "./node_modules/.bin/babel lib --out-dir dist"
+  },
+  "devDependencies": {
+    "typescript": "^3.1.3",
+    "@types/react": "^16.4.16",
+    "@types/redux": "^3.6.0",
+    "commitizen": "^2.9.6",
+    "conventional-changelog-cli": "^1.3.4",
+    "cz-conventional-changelog": "^2.0.0",
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0"
+  },
+  "peerDependencies": {
+    "react": "*"
+  },
+  "keywords": [
+    "react",
+    "redux",
+    "saga",
+    "code-splitting"
+  ],
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  }
+}
