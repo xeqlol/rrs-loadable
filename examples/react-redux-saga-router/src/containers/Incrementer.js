@@ -1,7 +1,7 @@
 import React from 'react';
 import { fetchIncrement } from '../reducers/incrementer/actions';
 import { connect } from 'react-redux';
-import { wrapModule } from '../../../../dist/index';
+import { wrap } from '../../../../dist/index';
 import { rootReducer, rootSaga } from '../reducers/incrementer';
 
 class Incrementer extends React.Component {
@@ -22,7 +22,7 @@ const connected = connect(
   dispatch => ({ fetchIncrement: () => dispatch(fetchIncrement()) })
 )(Incrementer);
 
-export default wrapModule({
+export default wrap({
   component: connected,
   reducerName: 'incrementer',
   reducer: rootReducer,

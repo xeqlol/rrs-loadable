@@ -1,7 +1,7 @@
 import React from 'react';
 import { divide } from '../reducers/divider/actions';
 import { connect } from 'react-redux';
-import { wrapModule } from '../../../../dist/index';
+import { wrap } from '../../../../dist/index';
 import { rootReducer } from '../reducers/divider';
 
 class Divider extends React.Component {
@@ -22,7 +22,7 @@ const connected = connect(
   dispatch => ({ fetchIncrement: () => dispatch(divide()) })
 )(Divider);
 
-export default wrapModule({
+export default wrap({
   component: connected,
   reducerName: 'divider',
   reducer: rootReducer

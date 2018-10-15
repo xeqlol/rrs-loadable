@@ -1,11 +1,31 @@
 import * as React from 'react';
-import { combineReducers } from 'redux';
+import { Store, combineReducers, Reducer } from 'redux';
+import { SagaMiddleware } from 'redux-saga';
 
-export function createLoadableComponent(store: any, sagaMiddleware: any) {
+interface Options {
+  placeholder?: React.ReactNode;
+}
+
+interface WrapperArguments {
+  component: React.ReactNode;
+  reducerName?: string;
+  reducer?: Reducer;
+  saga?: (...args: any[]) => any;
+}
+interface LoadableModule extends WrapperArguments {
+  __SECRET_KEY_DO_NOT_USE_PLEASE_OH_GOD_WHY: string;
+}
+
+const __SECRET_KEY_DO_NOT_USE_PLEASE_OH_GOD_WHY = 'SUPER_MEGA_KEY';
+
+export function createLoadableComponent(
+  store: Store,
+  sagaMiddleware?: SagaMiddleware<{}>
+) {
   const loadedReducers: any = {};
   const loadedComponents: any = {};
 
-  return (loader: any, options: any = {}) => {
+  return (loader: () => Promise<LoadableModule>, options: Options = {}) => {
     if (typeof loader !== 'function') {
       throw new Error('Loader should be function.');
     }
@@ -18,16 +38,16 @@ export function createLoadableComponent(store: any, sagaMiddleware: any) {
       componentWillMount() {
         loader().then((module: any) => {
           const {
-            wrapperResult,
+            __SECRET_KEY_DO_NOT_USE_PLEASE_OH_GOD_WHY,
             component,
             reducerName,
             reducer,
             saga
           } = module.default;
 
-          if (!wrapperResult) {
+          if (!__SECRET_KEY_DO_NOT_USE_PLEASE_OH_GOD_WHY) {
             throw new Error(
-              'Loaded module may not be a wrapModule result. Please, use wrapModule function to wrap loadable module.'
+              'Probably, loaded module is not a result of wrap function. Please, use wrap function to wrap loadable module.'
             );
           }
 
@@ -44,7 +64,7 @@ export function createLoadableComponent(store: any, sagaMiddleware: any) {
             store.replaceReducer(combineReducers(loadedReducers));
           }
 
-          if (saga) {
+          if (sagaMiddleware && saga) {
             sagaMiddleware.run(saga);
           }
 
@@ -63,26 +83,32 @@ export function createLoadableComponent(store: any, sagaMiddleware: any) {
   };
 }
 
-export function wrapModule({ component, reducerName, reducer, saga }: any) {
+export function wrap({
+  component,
+  reducerName,
+  reducer,
+  saga
+}: WrapperArguments): LoadableModule {
   if (!component) {
     throw new Error('Component should be provided.');
   }
 
   if ((!reducerName && reducer) || (reducerName && !reducer)) {
     throw new Error(
-      `'reducerName' cannot be provided without 'reducer' and vice versa.`
+      `reducerName cannot be provided without reducer and vice versa.`
     );
   }
 
   if (
-    typeof saga !== 'function' ||
-    saga.constructor.name !== 'GeneratorFunction'
+    saga &&
+    (typeof saga !== 'function' ||
+      saga.constructor.prototype.name !== 'GeneratorFunctionPrototype')
   ) {
     throw new Error('Saga must be a generator function.');
   }
 
   return {
-    wrapperResult: true,
+    __SECRET_KEY_DO_NOT_USE_PLEASE_OH_GOD_WHY,
     component,
     reducerName,
     reducer,

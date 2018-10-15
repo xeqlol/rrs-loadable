@@ -1,7 +1,7 @@
 import React from 'react';
 import { fetchMultiply } from '../reducers/multiplier/actions';
 import { connect } from 'react-redux';
-import { wrapModule } from '../../../../dist/index';
+import { wrap } from '../../../../dist/index';
 import { rootReducer, rootSaga } from '../reducers/multiplier';
 
 class Multiplier extends React.Component {
@@ -22,7 +22,7 @@ const connected = connect(
   dispatch => ({ fetchMultiply: () => dispatch(fetchMultiply()) })
 )(Multiplier);
 
-export default wrapModule({
+export default wrap({
   component: connected,
   reducerName: 'multiplier',
   reducer: rootReducer,
